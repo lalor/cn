@@ -8,7 +8,7 @@ tags: [sed, shell]
 
 ##1. 介绍
 
-之前转载了一篇关于sed的[文章][1]，刚开始觉得很不错，慢慢的，越来越觉得没什么用，因为我写博客，主要是作学习笔记，方便自己日后查阅，之前转载的文章只是简单的罗列参数，并没有详细的实例，又没有sed巧妙的用法，让我查阅起来很是不便，于是，我决定重写这篇文章。
+之前转载了一篇关于sed的[文章][1]，刚开始觉得很不错，慢慢的，越来越觉得没什么用，本来写博客就是作为学习笔记，方便自己日后查阅，之前转载的文章只是简单的罗列参数，并没有详细的实例，又没有sed巧妙的用法，让我查阅起来很是不便，于是，我决定重写这篇文章。
 
 
 ##2. 基本替换
@@ -21,8 +21,7 @@ sed可以替换给定文本中的字符串，最常见的使用方式是利用�
 	
 	cat file | sed 's/pattern/replace_string/' 
 
-sed
-并不会改动原始文件，而是将编辑后的结果输出到控制台，很多时候，我们是希望将sed
+sed并不会改动原始文件，而是将编辑后的结果输出到控制台，很多时候，我们是希望将sed
 的替换结果应用到原文件的，很多用户在进行替换以后，借助重定向来保存文件：
 
 	sed 's/text/replace/' file > newfile
@@ -109,66 +108,102 @@ sed
 
 ###4.5 sed 中的删除
 
-	sed '2d' example      # 删除example文件的第二行
-	sed '2,$d' example    # 删除example文件的第二行到末尾所有行
-	sed '$d' example      # 删除example文件的最后一行
-	sed '/test/'d example # 删除example文件所有包含test的行
+	sed '2d'      ufile #删除文件的第二行
+	sed '2,$d'    ufile #删除文件的第二行到末尾所有行
+	sed '$d'      ufile #删除文件的最后一行
+	sed '/test/'d ufile #删除文件所有包含test的行
 
 ###4.6 sed 中的替换
 
-	sed 's/test/mytest/g' example            # 在整行范围内把test替换为mytest。如果没有g标记，则只有每行第一个匹配的test被替换成mytest
+	#在整行范围内把test替换为mytest。如果没有g标记
+	#则只有每行第一个匹配的test被替换成mytest
+	sed 's/test/mytest/g' ufile            
 
+	#n选项和p标志一起使用表示只打印那些发生替换的行。也就是说，
+	#如果某一行开头的test被替换成mytest，就打印它
+	sed -n 's/^test/mytest/p' ufile        
 
-	sed -n 's/^test/mytest/p' example        # n选项和p标志一起使用表示只打印那些发生替换的行。也就是说，如果某一行开头的test被替换成mytest，就打印它
+	#&符号表示替换换字符串中被找到的部份。所有以192.168.0.1开头的行都会被替换成
+	#它自已加localhost，变成192.168.0.1localhost
+	sed 's/^192.168.0.1/&localhost/' ufile 
 
-	sed 's/^192.168.0.1/&localhost/' example # 符号表示替换换字符串中被找到的部份。所有以192.168.0.1开头的行都会被替换成它自已加localhost，变成192.168.0.1localhost
-
-
-	sed -n 's/\(love\)able/\1rs/p' example   # love被标记为1，所有loveable会被替换成lovers，而且替换的行会被打印出来。
+	#love被标记为1，所有loveable会被替换成lovers，而且替换的行会被打印出来。
+	sed -n 's/\(love\)able/\1rs/p' ufile   
 
 
 ###4.7 sed 中选定行的范围：逗号
 
+	#所有在模板test和check所确定的范围内的行都被打印。
+	sed -n '/test/,/check/p' ufile
 
-	sed -n '/test/,/check/p' example          # 所有在模板test和check所确定的范围内的行都被打印。
+	#打印从第五行开始到第一个以test开始的行之间的所有行。
+	sed -n '5,/^test/p' ufile              
 
-	sed -n '5,/^test/p' example               # 打印从第五行开始到第一个包含以test开始的行之间的所有行。
-
-	sed '/test/,/check/s/$/sed test/' example # 对于模板test和west之间的行，每行的末尾用字符串sed test替换。
+	#对于模板test和west之间的行，每行的末尾用字符串sed test替换。
+	sed '/test/,/check/s/$/sed test/' ufile 
 
 
 ###4.8 多点编辑：e命令
 
-	sed -e '1,5d' -e 's/test/check/' example                        # e)选项允许在同一行里执行多条命令。如例子所示，第一条命令删除1至5行，第二条命令用check替换test。命令的执行顺序对结果有影响。如果两个命令都是替换命令，那么第一个替换命令将影响第二个替换命令的结果。
+	# e选项允许在同一行里执行多条命令。如例子所示，第一条命令删除1至5行，
+	#第二条命令用check替换test。命令的执行顺序对结果有影响。如果两个命令都是替换命令，
+	#那么第一个替换命令将影响第二个替换命令的结果。
+	sed -e '1,5d' -e 's/test/check/' ufile                        
 
-	sed --expression='s/test/check/' --expression='/love/d' example # 一个比-e更好的命令是--expression。它能给sed表达式赋值。
+	#一个比-e更好的命令是--expression。它能给sed表达式赋值。
+	sed --expression='s/test/check/' --expression='/love/d' ufile 
 
 
 ###4.9 从文件读入：r命令 
 
-	sed '/test/r file' example #file里的内容被读进来，显示在与test匹配的行后面，如果匹配多行，则file的内容将显示在所有匹配行的下面。
+	#file里的内容被读进来，显示在与test匹配的行后面，如果匹配多行，则file的内容将显示在所有匹配行的下面。
+	sed '/test/r file' ufile 
 
 
 ###4.10 写入文件：w命令
 
-	sed -n '/test/w file' example #在example中所有包含test的行都被写入file里。
+	sed -n '/test/w file' ufile #在ufile中所有包含test的行都被写入file里。
 
 
 ###4.11 追加命令：a命令
 
-	sed '/^test/a\ this is a example' example < #this is a example'被追加到以test开头的行后面，sed要求命令a后面有一个反斜杠。
-
-	sed '/test/{ n; s/aa/bb/; }' example            #如果test被匹配，则移动到匹配行的下一行，替换这一行的aa，变为bb，并打印该行，然后继续。
+	#this is a example'被追加到以test开头的行后面，sed要求命令a后面有一个反斜杠。
+	sed '/^test/a\ this is a example' ufile  
+	#如果test被匹配，则移动到匹配行的下一行，替换这一行的aa，变为bb，并打印该行，然后继续。
+	sed '/test/{ n; s/aa/bb/; }' ufile            
 
 
 ###4.12 变形：y命令 
 
-	sed '1,10y/abcde/ABCDE/' example                #把1--10行内所有abcde转变为大写，注意，正则表达式元字符不能使用这个命令。
-
+	#把1至10行内所有abcde转变为大写，注意，正则表达式元字符不能使用这个命令。
+	sed '1,10y/abcde/ABCDE/' ufile                
 
 ###4.13 替换匹配行的一部分
 
-	这是我亲自遇到的一个问题，我有如下一行代码，需要将该代码替换成SOCKET(/usr)变量。
+这是我亲自遇到的一个问题，我有如下一行代码
+
+	resp = mysql_real_connect(ctx[t_num], connect_string, db_user, db_password, db_string,\
+			port, NULL, 0);
+
+现在需要将上面这条语句中的NULL替换成my.cnf中socket(`data/ntse/laimingxing/tntRelease/mydata/var/mysqld.sock`)
+的值。替换完成以后应该像下面这样。
+
+	resp = mysql_real_connect(ctx[t_num], "localhost", db_user, db_password, db_string,\
+			port, "/data/ntse/laimingxing/tntRelease/mydata/var/mysqld.sock", 0);
+
+	socket=/data/ntse/laimingxing/tntRelease/mydata/var/mysqld.sock
+	sed -i "/mysql_real_connect/s#NULL#\"$socket\"#g" main.c
+
+这里需要注意的是，因为提换的内容多次出现反斜杠，所以我们使用#作为定界符。但是，在匹配的时候是不能用定界符的，下面的语句将出错：
+
+	sed -i "#mysql_real_connect#s#NULL#\"$socket\"#g" main.c
+
+
+###4.14 替换匹配的行
+
+c命令用于替换匹配的行，例如，我要将文件perf.py 中的port="" 替换成port="3306"，就可以像下面这样：
+
+	sed -i "/^[ ]*port[ ]*=/c port='3306'" perf.py
 
 ##5. 删除C++源文件中的所有注释，
 
@@ -197,8 +232,8 @@ sed
 			sed -i '/^[ \t]*\/\*/,/.*\*\//d' $file
 	}
 	
-	
 	function del_comment()
+
 
 
 ##6. 删除html 标签
@@ -237,15 +272,10 @@ sed
 	sed 's/<.*>//g' file.html
 
 输出结果如下：
-
-	
-	
 	
 	This is the  lin in the web page. This should provide
 	some  information for us to use in our shell script.
 	
-	
-
 是不是不该删的东西也被删了，我之前也发现这个问题了，所以，我先删除结束标签，再删除开始标签：
 
 	cat file.html sed 's/<\/.*>//g' | sed 's/<.*>//g'
@@ -310,9 +340,12 @@ n 会首先找到匹配的模式，然后将跳到下一行执行相关操作，
 至于为什么N和n的使用方法（位置）不一样，这个我也不理解，就像java中数组有length property,
 Strings有length method , 而Lists 使用size method 一样，设计得很糟糕，不是吗？
 
+推荐阅读：酷壳网《[sed简明教程][5]》。
+
 完。
 
 [1]: http://www.tsnc.edu.cn/default/tsnc_wgrj/doc/sed.htm
 [2]: http://bbs.chinaunix.net/forum.php?mod=viewthread&tid=3775356&page=1#pid22322848
 [3]: http://book.douban.com/subject/1236944/
 [4]: http://mingxinglai.com/cn/2012/12/fetch-mail-in-terminal/
+[5]: http://coolshell.cn/articles/9104.html

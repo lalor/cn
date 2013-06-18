@@ -6,19 +6,16 @@ title: 简历（赖明星）
 
 # 联系方式
 
-Email：mingxinglai@gmail.com
-
-地址：厦门大学海韵园科研2号楼303室（邮编：361005）
-
-主页：<http://mingxinglai.com/>
-
-更多：<http://about.me/mingxinglai/>
+Email：me@mingxinglai.com  
+地址：厦门大学海韵园科研2号楼303室（邮编：361005）  
+主页：<http://mingxinglai.com/>  
+更多：<http://about.me/mingxinglai/>  
 
 # 专业技能
 
 - 不会Microsoft office
 - 不会盗QQ号
-- 也无法帮忙在`www.12306.com`抢到火车票
+- 也无法帮忙在`www.12306.cn`抢到火车票
 - 熟悉linux，C/C++，makefile，awk，精通Shell脚本
 - 掌握基本的数据结构和算法
 - 能够在linux下全键盘工作（vim，tmux，apvlv，awesome）
@@ -31,6 +28,11 @@ Email：mingxinglai@gmail.com
 - 2009.09 ~ 2011.07 杭州电子科技大学，本科
 - 2007.09 ~ 2009.07 宁波大红鹰职业技术学院，专科
 - 2004.09 ~ 2007.07 杭州市余杭区成人中等专业学校，中专
+
+# 工作经历
+
+- 2011.06 ~ 2011.08 杭州核心同化顺网络信息股份有限公司
+- 2013.05 ~ 至今 网易杭州研究院
 
 # 获得奖励
 
