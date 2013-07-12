@@ -25,13 +25,33 @@ tags: [iostat, vmstat, mpstat, netstat, tcpdump, dstat]
 
 上面语句的意思就是每3秒中输出一次内存统计数据，共输出5次。
 
+Tools: Basic & Intermediate
+
 1. <a href="#vmstat" > vmstat  </a>
 2. <a href="#iostat" > iostat  </a>
 3. <a href="#dstat"  > dstat   </a>
 4. <a href="#mpstat" > mpstat  </a>
 5. <a href="#netstat"> netstat </a>
 6. <a href="#strace" > strace  </a>
+7. <a href="#uptime" > uptime  </a>
 
+7. <a href="#top" > uptime  </a>
+7. <a href="#free" > uptime  </a>
+7. <a href="#ping" > uptime  </a>
+7. <a href="#nicstat" > uptime  </a>
+7. <a href="#sar" > uptime  </a>
+7. <a href="#pidsta" > uptime  </a>
+7. <a href="#tcpdump" > uptime  </a>
+7. <a href="#blktrace" > uptime  </a>
+7. <a href="#iotop" > uptime  </a>
+7. <a href="#slabtop" > uptime  </a>
+7. <a href="#sysctl" > uptime  </a>
+
+Tools: Advanced
+
+1. <a href="#perf" > perf  </a>
+2. <a href="#DTrace" > Dtrace  </a>
+3. <a href="#SystemTap" > SystemTap </a>
 
 <a name="vmstat"></a>
 #vmstat
@@ -69,6 +89,7 @@ swapd列显示了多少块被换出到了磁盘（页面交换）。剩下的三
 这些列显示所有的CPU时间花费在各类操作的百分比，包括执行用户代码（非内核），执行系统代码（内核），空闲以及等待IO。如果正在使用虚拟化，第5列可能是st，显示了从虚拟机中"偷走"的百分比。
 
 
+<a name="iostat"></a>
 #iostat
 
 现在让我们转移到iostat 。默认情况下，它显示了与vmstat 相同的CPU
@@ -79,6 +100,8 @@ swapd列显示了多少块被换出到了磁盘（页面交换）。剩下的三
 一样，第一行报告显示的是自系统启动以来的平均值，（通常删掉它节省空间），然后接下来的报告显示了增量的平均值，每个设备一行。
 
 有多种选项显示和隐藏列。官方文档有点难以理解，因此我们必须从源码中挖掘真正显示的内容是什么。说明的列信息如下：
+
+为了看懂Linux的磁盘IO指标，先了解一些常见的缩写习惯：rq是request，r是read，w是write，qu是queue，sz是size的，a是average，tm是time，svc是service。
 
 * rrqm/s 和 wrqm/s
 
@@ -97,7 +120,7 @@ swapd列显示了多少块被换出到了磁盘（页面交换）。剩下的三
 
 	请求的扇区数。
 
-* avgqu-sz 
+* avgqu-sz
 
 	在设备队列中等待的请求数。
 
@@ -106,7 +129,7 @@ swapd列显示了多少块被换出到了磁盘（页面交换）。剩下的三
 	磁盘排队上花费的毫秒数。很不幸，iostat
 	没有独立统计读和写的请求，它们实际上不应该一起平均。
 
-* svctm 
+* svctm
 
 	服务请求花费的毫秒数，不包括排队时间。
 
@@ -114,8 +137,9 @@ swapd列显示了多少块被换出到了磁盘（页面交换）。剩下的三
 
 	至少有一个活跃请求所占时间的百分比。
 
+这里有一篇关于iostat的，讲得非常详细且深刻的[文章][3]。
 
-#cpu 密集型机器
+##cpu 密集型机器
 
 cpu 密集型服务器的vmstat 输出通常在us
 列会有一个很高的值，报告了花费在非内核代码上的cpu 时钟；也可能在sy
@@ -129,7 +153,7 @@ cpu 密集型服务器的vmstat 输出通常在us
 
 这台机器不是IO密集型的，但是依然有相当数量的IO发生，在数据库服务器中这种情况很少见。另一方面，传统的Web 服务器会消耗掉大量的CPU 资源，但是很少发生IO,所以Web 服务器的输出不会像这个例子。
 
-#IO 密集型机器
+##IO 密集型机器
 
 在IO密集型工作负载下，CPU花费大量时间在等待IO请求完成。这意味着vmstat
 会显示很多处理器在非中断休眠(b列)状态，并且在wa 这一列的值很高，下面是个例子：
@@ -144,19 +168,20 @@ cpu 密集型服务器的vmstat 输出通常在us
 
 想想这种方式：你可以发出一个写请求到缓冲区的某个地方，然后过一会完成。甚至可以每秒发出很多这样的请求。如果缓冲区正确工作，并且有足够的空间，每个请求都可以很快完成，并且实际上写到物理硬盘是被重新排序后更有效地批量操作的。然而，没有办法对读操作这么做————不管多小或多少的请求，都不可能让硬盘响应说："这是你的数据，我等一会读它"。这就是为什么读需要IO等待是可以理解的原因。
 
-#发生内存交换的机器
+##发生内存交换的机器
 
 一台正在发生内存交换的机器可能在swpd
 列有一个很高的值，也可能不高。但是可以看到si 和 so
 列有很高的值，这是我们不希望看到的。下面是一台内存交换严重的机器的vmstat 输出：
 <a href="http://imgur.com/qLzTzsY"><img src="http://i.imgur.com/qLzTzsY.png" title="Hosted by imgur.com"/></a>
 
-#空闲的机器
+##空闲的机器
 
 下面是一台空闲机器上的vmstat输出。可以看到idle列显示CPU是100%的空闲。
 <a href="http://imgur.com/RZPIWHJ"><img src="http://i.imgur.com/RZPIWHJ.png" title="Hosted by imgur.com"/></a>
 
 
+<a name="dstat"></a>
 #dstat
 
 dstat 显示了cpu使用情况，磁盘io 情况，网络发包情况和换页情况。
@@ -171,6 +196,7 @@ dstat使用时，直接输入命令即可，不用任何参数。也可以通过
 ![dstat](http://coolshell.cn//wp-content/uploads/2012/07/dstat_screenshot.png)
 	
 
+<a name="mpstat"></a>
 #mpstat
 
 mpstat 用来统计多核处理器中，每一个处理器的使用情况。mpstat使用方法很简单，常见用法如下：
@@ -187,6 +213,7 @@ mpstat 用来统计多核处理器中，每一个处理器的使用情况。mpst
 	sudo apt-get install sysbench 
 
 
+<a name="netstat"></a>
 #netstat
 
 netstat用于显示与IP、TCP、UDP和ICMP协议相关的统计数据，一般用于检验本机各端口的网络连接情况。
@@ -216,6 +243,7 @@ netstat 也可以提供系统上的接口信息：
 这个命令打印每个接口的MTU,输入分组数，输入错误，输出分组数，输出错误，冲突以及当前的输出队列的长度。
 
 
+<a name="strace"></a>
 #strace
 
 用我自己的理解来介绍strace:  
@@ -233,6 +261,33 @@ netstat 也可以提供系统上的接口信息：
 
 strace太强大，内容也太多了，我找到一篇比较好的，介绍strace的文章，请点击[这里][2]。
 
+<a name="uptime"></a>
+#uptime
+
+uptime是最最最最简单的工具了，但是也有值得讨论的地方，那就是它最后输出的三个数字是怎么得来的，代表什么意思？
+
+这三个数字的意思是1分钟、5分钟、15分钟内系统的平均负荷，关于这些数字的意义和原理，推荐看阮一峰的文章《[理解linux系统负荷这里][4]》。
+
+我想说的是，这三个数字我天天看，时时看，但是我从来不相信它。
+
+此话怎讲呢？我之所以天天看，时时看，是因为我将这三个数字显示到了[tmux][5]
+的[状态栏][6]上，所以，我任何时候都可以看到,而不用专门输入`uptime`这个命令。
+
+为什么我不相信它呢，因为这几个数字只能说明有多少线程在等待cpu,如果我们的一个任务有很多线程，系统负载不是特别高，但是这几个数字会出奇的高，也就是不能完全相信uptime的原因。如果不信，可以执行下面这条语句，然后再看看uptime的输出结果。
+
+    sysbench --test=mutex --num-threads=1600 --mutex-num=2048 \
+                    --mutex-locks=1000000 --mutex-loops=5000 run
+
+运行了5分钟以后，我的电脑上输出如下所示。需要强调的是，这个时候电脑一点不卡，看uptime来判断系统负载，跟听cpu风扇声音判断系统负载一样。哈。
+
+     20:32:39 up 10:21,  4 users,  load average: 386.53, 965.37, 418.57
+
+《Linux Performance Analysis and Tools》里面也说了，This is only useful as a
+clue. Use other tools to investigate!
 
 [1]:http://www.slideshare.net/brendangregg/linux-performance-analysis-and-tools
 [2]:http://www.dbabeta.com/2009/strace.html
+[3]:http://bhavin.directi.com/iostat-and-disk-utilization-monitoring-nirvana/
+[4]:http://www.ruanyifeng.com/blog/2011/07/linux_load_average_explained.html
+[5]:http://mingxinglai.com/cn/2012/09/tmux/
+[6]:https://github.com/lalor/.git-dotfile/blob/master/tmux.conf
