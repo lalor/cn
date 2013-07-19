@@ -11,7 +11,7 @@ tags: [iostat, vmstat, mpstat, netstat, tcpdump, dstat]
 
 上面这张神一样的图出自国外一个Lead Performance Engineer(Brendan Gregg)的一次[分享][1]，几乎涵盖了一个系统的方方面面，任何人，如果没有完善的计算系统知识，网络知识和操作系统的知识，这张图中列出的工具，是不可能全部掌握的。
 
-出于本人对linux系统的极大兴趣，以及对底层知识的强烈渴望，并作为检验自己基础只是的一个指标，我决定将这里的所有工具学习一遍（时间不限），这篇文章将作为我学习这些工具的学习笔记。尽量组织得方便自己日后查阅，并希望对别人也有一定帮助。
+出于本人对linux系统的极大兴趣，以及对底层知识的强烈渴望，并作为检验自己基础知识的一个指标，我决定将这里的所有工具学习一遍（时间不限），这篇文章将作为我学习这些工具的学习笔记。尽量组织得方便自己日后查阅，并希望对别人也有一定帮助。
 
 这里所有的工具，都可以通过man 获得它的帮助文档，这里只介绍一些常规用法。
 
@@ -58,7 +58,7 @@ Tools: Advanced
 
 我们先看一个vmstat 的例子。用下面的命令让它每5秒中打印一个报告。
 <a href="http://imgur.com/cWzr7lv"><img src="http://i.imgur.com/cWzr7lv.png" title="Hosted by imgur.com"/></a>
-可以用ctrl+c停止vmstat。vmstat的常规用法是`vmstat interval times`，即每个interval秒采
+可以用ctrl+c停止vmstat。vmstat的常规用法是`vmstat interval times`，即每隔interval秒采
 样一次，共采样times次，如果省略times，则一直采集数据到用户手动停止。
 
 第一行的值是显示了自系统启动以来的平均值，第二行开始展示现在正在发生的情况，接下来的行会显示每5秒的间隔内发生了什么。每一列的含义在头部，如下所示：
@@ -109,35 +109,51 @@ swapd列显示了多少块被换出到了磁盘（页面交换）。剩下的三
 
 * r/s 和 w/s
 
-	每秒发送到设备的读和写请求。
+	每秒发送到设备的读和写请求数。
 
 * rsec/s 和 wsec/s
 
-	每秒读和写的扇区数。有些系统也输出为rKB/s 和 wKB/s
-	，意味每秒读写的千字节数。
+	每秒读和写的扇区数。有些系统也输出为rKB/s和wKB/s
+	，意味每秒读写的千字节数。(`iostat -dkx interval times`)
 
 * avgrq-sz
 
-	请求的扇区数。
+	请求的扇区数。(读扇区数 + 写扇区数) / (读请求次数 + 写请求次数)
 
 * avgqu-sz
 
-	在设备队列中等待的请求数。
+	在设备队列中等待的请求数。即队列的平均长度。
 
 * await
 
-	磁盘排队上花费的毫秒数。很不幸，iostat
-	没有独立统计读和写的请求，它们实际上不应该一起平均。
+    每个IO请求花费的时间，包括在队列中的等待时间和实际请求（服务）时间。
 
 * svctm
 
-	服务请求花费的毫秒数，不包括排队时间。
+	实际请求（服务）时间，以毫秒为单位，不包括排队时间。
 
 * %util
 
-	至少有一个活跃请求所占时间的百分比。
+	至少有一个活跃请求所占时间的百分比。更好的说法应该是，服务时间所占的百分比。以上面的输出为例。
+    一秒中内，读了2.5次，写了1.8次，每次请求的实际请求时间（不包括排队时间）为6.0ms,那么总的时间花费为(2.5+1.8)*6.0ms，即25.8ms，0.0258秒，转换成百分比再四舍五入就得到了util的值2.6%。
 
-这里有一篇关于iostat的，讲得非常详细且深刻的[文章][3]。
+    %util: When this figure is consistently approaching above 80% you will need to take any of the following actions -
+    * increasing RAM so dependence on disk reduces
+    * increasing RAID controller cache so disk dependence decreases
+    * increasing number of disks so disk throughput increases (more spindles working parallely)
+    * horizontal partitioning
+
+下面这个公式可以计算一个请求在整个请求期间，有多少时间用以等待。当这个值大于50%，说明整个请求期间，花费了更多时间在队列中等待；如果这个数很大，则应该采取相应措施。
+
+* (await-svctim)/await*100: The percentage of time that IO operations spent waiting in queue in comparison to actually being serviced. If this figure goes above 50% then each IO request is spending more time waiting in queue than being processed. If this ratio skews heavily upwards (in the >75% range) you know that your disk subsystem is not being able to keep up with the IO requests and most IO requests are spending a lot of time waiting in queue. In this scenario you will again need to take any of the actions above
+
+
+下面解释了iowait的作用，需要注意的是，高速CPU也可能导致iowait取值较大。
+
+* %iowait: This number shows the % of time the CPU is wasting in waiting for IO. A part of this number can result from network IO, which can be avoided by using an Async IO library. The rest of it is simply an indication of how IO-bound your application is. You can reduce this number by ensuring that disk IO operations take less time, more data is available in RAM, increasing disk throughput by increasing number of disks in a RAID array, using SSD (Check my post on Solid State drives vs Hard Drives) for portions of the data or all of the data etc
+
+上面的解释主要参考《高性能mysql》和这篇[博客][3]。
+
 
 ##cpu 密集型机器
 
