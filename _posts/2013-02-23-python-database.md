@@ -13,7 +13,7 @@ tags: [python, database, mysql, sqlite]
 
 python 社区制定了操作数据库的标准，所以，我们可以通过统一的接口访问不同的数据库，减少了我们的学习负担。
 
-标准主要定义了两个对象，一个用于管理Connection 对象，另一个是用于执行查询的Cursor 对象。
+标准主要定义了两个对象，一个用于管理连接的Connection对象，另一个是用于执行查询的Cursor 对象。
 
 #Python 操作数据库的步骤
 
@@ -44,12 +44,12 @@ python 操作数据库的思路如下：
 		#open databases
 		if	DATABASE == "sqlite3":
 			import sqlite3 as db
-			conn = db.connect("mydb1")
+			conn = db.connect("test")
 			strInsert = "insert into stocks values(?, ?, ?)"
 		else:
 			import MySQLdb as db
-			#conn = db.connect(host="localhost", user="root", passwd="your password", db="students")
-			conn = db.connect(host="localhost", db="students", read_default_file="~/.my.cnf")
+			#conn = db.connect(host="localhost", user="root", passwd="passwd", db="test")
+			conn = db.connect(host="localhost", db="test", read_default_file="~/.my.cnf")
 			strInsert = "insert into stocks values(%s, %s, %s)"
 		
 		#get cursor object
@@ -61,7 +61,7 @@ python 操作数据库的思路如下：
 		for r in csv.reader(f):
 			stocks.append(r)
 		
-		create databses
+        #create databses
 		cur.execute("create table stocks( symbol text, shares integer, price real)")
 		conn.commit()
 		
@@ -95,11 +95,11 @@ mysql数据库有两种连接方式（可能有很多种），一种是通过指
 		#open databases
 		if	DATABASE == "sqlite3":
 			import sqlite3 as db
-			conn = db.connect("mydb")
+			conn = db.connect("test")
 		else:
 			import MySQLdb as db
-			#conn = db.connect(host="localhost", user="root", passwd="your password", db="students")
-			conn = db.connect(host="localhost", db="students", read_default_file="~/.my.cnf")
+			#conn = db.connect(host="localhost", user="root", passwd="passwd", db="test")
+			conn = db.connect(host="localhost", db="stocks", read_default_file="~/.my.cnf")
 		
 		#crate cursor object
 		cur = conn.cursor()

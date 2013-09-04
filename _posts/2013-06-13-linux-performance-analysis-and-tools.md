@@ -39,44 +39,30 @@ Tools: Basic & Intermediate
 #strace
 #iotop
 #pidstat
-#ps#
-#lsof#
+#ps
+#lsof
 
+<!-- #nicstat #sar #tcpdump #blktrace #slabtop #sysctl #/proc #perf #DTrace #SystemTap -->
 
-
-
-#nicstat
-#sar
-#tcpdump
-#blktrace
-#slabtop
-#sysctl
-#/proc
-#perf
-#DTrace
-#SystemTap
-
-
-
-
+1. <a href="#uptime" > uptime  </a>
+1. <a href="#top"    > top     </a>
+1. <a href="#htop"   > htop    </a>
+1. <a href="#mpstat" > mpstat  </a>
+1. <a href="#iostat" > iostat  </a>
 1. <a href="#vmstat" > vmstat  </a>
-2. <a href="#iostat" > iostat  </a>
-3. <a href="#dstat"  > dstat   </a>
-3. <a href="#iotop"  > iotop   </a>
-4. <a href="#top"    > top     </a>
-4. <a href="#htop"   > htop    </a>
-5. <a href="#mpstat" > mpstat  </a>
-5. <a href="#netstat"> netstat </a>
-6. <a href="#ps"     > ps      </a>
-6. <a href="#strace" > strace  </a>
-7. <a href="#uptime" > uptime  </a>
-7. <a href="#lsof"   > lsof    </a>
-7. <a href="#sar"    > sar     </a>
+1. <a href="#dstat"  > dstat   </a>
+1. <a href="#netstat"> netstat </a>
+1. <a href="#strace" > strace  </a>
+1. <a href="#iotop"  > iotop   </a>
+1. <a href="#pidstat"> pidstat </a>
+1. <a href="#ps"     > ps      </a>
+1. <a href="#lsof"   > lsof    </a>
 
+<!--
+7. <a href="#sar"    > sar     </a>
 7. <a href="#free" > uptime  </a>
 7. <a href="#ping" > uptime  </a>
 7. <a href="#nicstat" > uptime  </a>
-7. <a href="#pidsta" > uptime  </a>
 7. <a href="#tcpdump" > uptime  </a>
 7. <a href="#blktrace" > uptime  </a>
 7. <a href="#iotop" > uptime  </a>
@@ -88,6 +74,7 @@ Tools: Advanced
 1. <a href="#perf" > perf  </a>
 2. <a href="#DTrace" > Dtrace  </a>
 3. <a href="#SystemTap" > SystemTap </a>
+-->
 
 
 
@@ -529,11 +516,14 @@ lsof 的使用方法可以参考[这里][9]。这里仅列出几种常见的用�
 2. 《[使用lsof查找打开的文件][8]》
 
 
+<!--
+
 #sar
 
 sar（System Activity Reporter系统活动情况报告）是目前Linux上最为全面的系统性能分析工具之一，可以从多方面对系统的活动进行报告，包括：文件的读写情况、系统调用的使用情况、磁盘I/O、CPU效率、内存使用状况、进程活动及IPC有关的活动等。
 
 下面介绍几种常见
+-->
 
 
 

@@ -13,10 +13,24 @@
 pre.prettyprint {
 margin-top: 20px;
 margin-bottom: 10px;
-background-color:#F7F7F9; /*f7f7f9*/
-padding-left:0.5em;
+margin-left: 2px;
+margin-right: 2px;
+background-color:#FFFFFF; /*f7f7f9*/
 font-size:15px;
 line-height:1.1;
+white-space: pre;
+white-space: pre-wrap;
+word-wrap: break-word;
+word-break: break-all;
+overflow:auto;
+overflow-Y:hidden
+padding: 2px 3px
+border: 1px solid #FFFFFF;
+color: #333333;
+display: block;
+}
+pre:hover{
+  	background-color: #f7f7f9;
 }
 @media print {
     .str{color:#060;}
