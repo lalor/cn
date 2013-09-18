@@ -25,9 +25,10 @@ tags: [iostat, vmstat, mpstat, netstat, tcpdump, dstat]
 
 上面语句的意思就是每3秒中输出一次内存统计数据，共输出5次。
 
-Tools: Basic & Intermediate
+**Tools: Basic & Intermediate**
 
 
+<!--
 #uptime
 #top
 #htop
@@ -42,7 +43,7 @@ Tools: Basic & Intermediate
 #ps
 #lsof
 
-<!-- #nicstat #sar #tcpdump #blktrace #slabtop #sysctl #/proc #perf #DTrace #SystemTap -->
+ #nicstat #sar #tcpdump #blktrace #slabtop #sysctl #/proc #perf #DTrace #SystemTap -->
 
 1. <a href="#uptime" > uptime  </a>
 1. <a href="#top"    > top     </a>

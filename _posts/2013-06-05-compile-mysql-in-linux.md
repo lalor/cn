@@ -42,21 +42,26 @@ tags: [mysql, 源码编译]
 
 ##4. 安装mysql 源码需要的库
 
-	sudo apt-get install build-essential libncurses5-dev 
+	sudo apt-get install build-essential libncurses5-dev
 
 ##5. 开始安装MySQL
-	
+
 	下载地址：http://dev.mysql.com/, 解压并安装MySQL
 
-	tar zxvf mysql-5.5.13.tar.gz  
-	cd mysql-5.5.13  
+	tar zxvf mysql-5.5.13.tar.gz
+	cd mysql-5.5.13
 	cmake . \
 	-DCMAKE_INSTALL_PREFIX=/usr/local/mysql \
-	-DINSTALL_DATADIR=/usr/local/mysql/data  
-	make  
-	sudo make install  
+	-DINSTALL_DATADIR=/usr/local/mysql/data
+	make
+	sudo make install
 
-注意，执行cmake 命令时，反斜杠后面不能有空格。
+注意1:执行cmake 命令时，反斜杠后面不能有空格。
+
+注意2:编译mysql-5.6.13时，cmake的参数如下(请自行修改mysql的安装路径)：
+
+    cmake . -DCMAKE_INSTALL_PREFIX=/home/lalor/code/mysql \
+    -DMYSQL_DATADIR=/home/lalor/code/mysql/data
 
 ##6. 完成后，继续下面的操作初始化数据库
 
@@ -66,16 +71,16 @@ tags: [mysql, 源码编译]
 	cd /usr/local/mysql
 	./scripts/mysql_install_db --user=`whoami` --no-defaults
 
-切记后面有个`--no-defaults`选项，如果没有该选项，则程序会自动载入默认的配置文档，而目前你还没有完成配置文件的编写，因此，很可能载入的是错误的信息。如果该指令能够运行成功，那么恭喜你，你的MySQL 可以成功启动了。
+切记后面有个`--no-defaults`选项，如果没有该选项，则程序会自动载入默认的配置文档，而目前你还没有完成配置文件的编写，因此，很可能载入的是错误的信息。如果该指令能够运行成功，那么恭喜你，你的MySQL可以成功启动了。
 
 ##7. 修改配置文件
 
-	cp support-files/my-default.cnf /etc/my.cnf 
+	cp support-files/my-default.cnf /etc/my.cnf
 	vim /etc/my.cnf
 
-关于mysql 的配置文件的前后顺序，可以参考[这里](http://weibo.com/2216172320/zxUaAaiuu)。
+关于mysql的配置文件的前后顺序，可以参考[这里](http://weibo.com/2216172320/zxUaAaiuu)。
 
-打开my.cnf 文件，加入下面两条语句
+打开my.cnf文件，加入下面两条语句
 
 	[client]
 	sock = /tmp/mysqld.sock
@@ -94,24 +99,24 @@ tags: [mysql, 源码编译]
 
 ##9. 运行服务进程：
 
-	/usr/local/mysql/bin/mysqld 
+	/usr/local/mysql/bin/mysqld
 
 如果ctrl+c 不能关闭服务进程，请使用ctrl+\
 
 运行客户端进程：
 
-	/usr/local/mysql/bin/mysql -u root -p   
+	/usr/local/mysql/bin/mysql -u root -p
 
 初始时，root密码为空，直接回车即可。也可以像下面这样：
 
-	/usr/local/mysql/bin/mysql -u root 
+	/usr/local/mysql/bin/mysql -u root
 
 我们只要指定myqld和mysql的路径就可以启动mysql了，不过，还有更简单的办法。
 
 ##10.启动mysqld
 
 	cd /usr/local/mysql
-	sudo cp support-files/mysql.server /etc/init.d/mysqld 
+	sudo cp support-files/mysql.server /etc/init.d/mysqld
 
 现在我们就可以通过下面的命令启动、查看、关闭mysql 服务了。
 
@@ -133,7 +138,7 @@ tags: [mysql, 源码编译]
 
 ##常见问题1：启动不了?
 
-是否已经启动了一个进程
+是否已经启动了一个进程？
 
 	ps aux | grep "mysql"
 
@@ -146,7 +151,7 @@ tags: [mysql, 源码编译]
 	sudo chown -R lalor /var/run/mysqld
 	sudo chgrp -R lalor /var/run/mysqld
 	sudo vim /etc/my.cnf
-	socket = /var/run/mysqld/mysqld.sock 
+	socket = /var/run/mysqld/mysqld.sock
 
 
 完。
