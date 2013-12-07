@@ -114,7 +114,7 @@ tags: [shell]
     里面虽然有很多知识你可能在其他地方已经见过，但是这么多编程技巧里面，只要有一条你不知道，
     并在知道以后长期使用就值得你看了。
 
-    我第一次写一个较复杂的脚本的时侯，拥到了多进程，需要在主进程里面等待子进程结束。当时我的做法
+    我第一次写一个较复杂的脚本的时侯，用到了多进程，需要在主进程里面等待子进程结束。当时我的做法
     是记录下子进程的pid(sleep 10 &; pid= $!)，然后使用while
     循环判断进程是否结束(kill -s 0 $pid)，进程少还行，子进程多了一后就没法这么干了。
     其实有一个很好也很方便的做法，使用`wait`命令即可。这个命令我就是在简洁bash编程里学到的。
@@ -152,8 +152,8 @@ linux发行版。二十岁时写下的这本《linux shell脚本攻略》，现�
 [url9]: http://mywiki.wooledge.org/BashPitfalls
 [url10]:http://kodango.com/simple-bash-programming-skills
 
-[img1]: /image/material_of_shell01.jpg
-[img2]: /image/material_of_shell02.jpg
-[img3]: /image/material_of_shell03.jpg
-[img4]: /image/material_of_shell04.jpg
-[img5]: /image/material_of_shell05.png
+[img1]: /cn/image/material_of_shell01.jpg
+[img2]: /cn/image/material_of_shell02.jpg
+[img3]: /cn/image/material_of_shell03.jpg
+[img4]: /cn/image/material_of_shell04.jpg
+[img5]: /cn/image/material_of_shell05.png
