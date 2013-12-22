@@ -196,7 +196,11 @@ KMP算法要讲清楚很不容易，网络上一搜一大堆材料，看完还�
 
 #4. Boyer-Moore算法
 
-待补充。
+待补充。<http://blog.jobbole.com/52830/>
+
+#5. Sunday算法
+
+<http://blog.163.com/yangfan876@126/blog/static/80612456201342205056344>
 
 [1]:http://www.ruanyifeng.com/blog/2013/05/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm.html
 [2]:http://net.pku.edu.cn/~course/cs101/2007/resource/Intro2Algorithm/book6/chap34.htm

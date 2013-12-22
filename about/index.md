@@ -39,4 +39,4 @@ pagetitle: 成长的过程是痛苦的，我微笑面对
 [7]: http://mingxinglai.com/cn/2012/08/daxuesuixiang/
 [8]: http://en.wikipedia.org/wiki/Don't_be_evil
 [9]: http://about.me/mingxinglai
-[10]:http://sdrv.ms/YDtUWI
+[10]:https://sdrv.ms/YDtUWI

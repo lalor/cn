@@ -6,3 +6,5 @@ comments: yes
 ---
 
 <a href="http://imgur.com/qZ55W"><img src="http://i.imgur.com/qZ55W.png" alt="" title="Hosted by imgur.com" /></a>
+
+Drop some words :P
