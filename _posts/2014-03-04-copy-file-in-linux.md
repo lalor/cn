@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Linux下的常用文件传输方式介绍与比较"
+title: "Linux下常用的文件传输方式介绍与比较"
 description: "copy file"
 category: 工具
 tags: [ftp, nc, rsync, ssh, scp]
