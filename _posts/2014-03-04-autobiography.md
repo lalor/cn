@@ -1,6 +1,6 @@
-	---
+---
 layout: post
-title: "博主的简略版自传"
+title: "A brief autobiography of Mingxing LAI"
 category: 生活
 tags: [生活, 自传]
 ---
