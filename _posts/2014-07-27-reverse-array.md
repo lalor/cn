@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "位操作的练习题"
+title: "旋转数组"
 description: ""
 category: 算法
 tags: [C语言, 算法]
