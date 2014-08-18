@@ -13,14 +13,13 @@ Email：me@mingxinglai.com
 
 # 专业技能
 
-- 不会Microsoft office
-- 不会盗QQ号
-- 也无法帮忙在`www.12306.cn`抢到火车票
-- 熟悉linux，C/C++，makefile，awk，精通Shell脚本
 - 掌握基本的数据结构和算法
+- 熟悉linux，C/C++，python, makefile，gcc, gdb, git, 精通Shell脚本
+- 喜欢折腾linux下的各种监控和调优工具(iostat, perf, dstat, tcpdump)
 - 能够在linux下全键盘工作（vim，tmux，apvlv，awesome, zsh）
-- 熟悉MySql，了解Python
-- 对网络编程和NoSql有极大的兴趣
+- 熟悉MySql，正在研究MySQL源码，希望在数据库领域有点成绩
+- 对系统编程，网络编程和NoSql有极大的兴趣
+- 不爱追求时髦技术，喜欢研究计算机系统原理（深入理解计算机系统）
 
 # 教育背景
 
@@ -31,6 +30,7 @@ Email：me@mingxinglai.com
 
 # 工作经历
 
+- 2014.07 ~ 至今 网易在线游戏事业部，SA
 - 2013.05 ~ 2013.08 网易杭州研究院，[TNT](http://hedengcheng.com/)组实习生
 - 2011.06 ~ 2011.08 杭州核心同花顺网络信息股份有限公司，实习生
 
