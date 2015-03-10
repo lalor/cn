@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "What's New in MySQL(performance_schema)"
+title: "What's New in MySQL 5.6(performance_schema)"
 description: ""
-category: 程序语言
+category: 数据库
 tags: [mysql]
 ---
 
@@ -157,7 +157,7 @@ Performance_schema中的表，按功能大致可以分为以下几类：
 
 下面是根据各个表的具体作用进行分类：
 
-![img2](/cn/image/performance_schema01.png)
+![img2](/cn/image/performance_schema02.png)
 
 ## 3.示例
 
