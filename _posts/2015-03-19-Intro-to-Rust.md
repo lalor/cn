@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Rust:一门值得关注的新语言"
+title: "Rust：一门值得关注的新语言"
 description: ""
 category: 编程语言
 tags: [Rust]
@@ -15,12 +15,12 @@ Rust是一门系统编程语言，它的目标是取代C/C++，这一点上，�
 
 在详细介绍Rust语言之前，先来看一下它的历史：
 
->2006年，Rust作为Graydon Hoare的个人项目首次出现；
->2009年，Graydon Hoare成为Mozilla雇员；
->2010年，Rust首次作为Mozilla官方项目出现。同年，Rust开始从初始编译（由OCaml写成）转变为自编译；
->2011年，Rust成功的完成了移植。Rust的自编译器采用LLVM作为其编译后端；
->2012年1月20日，第一个有版本号的预览版Rust编译器发布。当前最新版本为0.12，于2014年10月发布；
->2013年4月4日，Mozilla基金会宣布将与三星集团合作开发浏览器排版引擎Servo将以Rust来实现；
+1. 2006年，Rust作为Graydon Hoare的个人项目首次出现；
+1. 2009年，Graydon Hoare成为Mozilla雇员；
+1. 2010年，Rust首次作为Mozilla官方项目出现。同年，Rust开始从初始编译（由OCaml写成）转变为自编译；
+1. 2011年，Rust成功的完成了移植。Rust的自编译器采用LLVM作为其编译后端；
+1. 2012年1月20日，第一个有版本号的预览版Rust编译器发布。当前最新版本为0.12，于2014年10月发布；
+1. 2013年4月4日，Mozilla基金会宣布将与三星集团合作开发浏览器排版引擎Servo将以Rust来实现；
 
 从发明时间可以看到，Rust相对于C++/Java，是一门非常新的语言。
 
