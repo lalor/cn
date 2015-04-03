@@ -19,7 +19,7 @@ tags: [数据库, 分享, PPT]
 PPT下载地址：
 
 
-[![image](/cn/powerpoint.png "TokuDB.ppt")][1]
+[![image](/cn/image/powerpoint.png "TokuDB.ppt")][1]
 
 
 [1]:https://raw.githubusercontent.com/lalor/cn/gh-pages/slides/ppt/tokudb.ppt
