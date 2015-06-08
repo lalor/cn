@@ -8,13 +8,13 @@ tags: [redis]
 
 # 1. 介绍
 
-众所周知，redis是一个开源、短小、高效的key-value存储系统，它相对于memcached最显著的优势是，支持更加丰富的数据结构,包括：
+众所周知，redis是一个开源、短小、高效的key-value存储系统，相对于memcached，redis能够支持更加丰富的数据结构，包括：
 
-1. 字符串
+1. 字符串（string）
 1. 哈希表（map）
 1. 列表（list）
 1. 集合（set）
-1. 有序集
+1. 有序集（zset）
 
 主流的key-value存储系统，都是在系统内部维护一个hash表，因为对hash表的操作时间复杂度为O(1)。如果数据增加以后，导致冲突严重，时间复杂度增加，则可以对hash表进行rehash，以此来保证操作的常量时间复杂度。
 
@@ -22,7 +22,7 @@ tags: [redis]
 
 # 2. redisServer
 
-在redis系统内部，有一个redisServer结构体，该结构体保存了redis服务端所有的信息，包括当前进程的PID、服务器的端口号、数据库个数、统计信息等等。当然，它也包含了数据库信息，包括数据库的个数、以及一个redisDb数组。
+在redis系统内部，有一个`redisServer`结构体的全局变量`server`，`server`保存了redis服务端所有的信息，包括当前进程的PID、服务器的端口号、数据库个数、统计信息等等。当然，它也包含了数据库信息，包括数据库的个数、以及一个redisDb数组。
 
     struct redisServer {
         ……
@@ -35,7 +35,7 @@ tags: [redis]
 
 ![image](/cn/image/redis_dict01.png)
 
-从上面的分析中可以看到，redisServer是一个全局变量，它包含了若干个redisDb，每一个redisDb是一个keyspace，各个keyspace互相独立，互不干扰。
+从上面的分析中可以看到，`server`是一个全局变量，它包含了若干个redisDb，每一个redisDb是一个keyspace，各个keyspace互相独立，互不干扰。
 
 下面来看一下redisDb的定义：
 
@@ -53,7 +53,7 @@ tags: [redis]
         long long avg_ttl;          /* Average TTL, just for stats */
     } redisDb;
 
-redis的每一个数据库是一个独立的keyspace，因此，我们理所当然的认为，redis的数据库是一个hash表。但是，从redisDb的定义来看，这并不是一个hash表，而是一个包含了很多hash表及其他信息的结构。之所以这样做，是因为redis还需要提供除了set、get以外更加丰富的功能，例如：键的超时机制。我们今天只关注最重要的数据结构：
+redis的每一个数据库是一个独立的keyspace，因此，我们理所当然的认为，redis的数据库是一个hash表。但是，从redisDb的定义来看，它并不是一个hash表，而是一个包含了很多hash表的结构。之所以这样做，是因为redis还需要提供除了set、get以外更加丰富的功能(例如：键的超时机制)。我们今天只关注最重要的数据结构：
 
     typedef struct redisDb {
         dict *dict;                 /* The keyspace for this DB */
@@ -73,7 +73,7 @@ redisDb与redisServer的关系如下所示：
         ……
     } dict;
 
-dict包含了两个hash表，之所以这样做，是为了支持渐进式的rehash，即，在大多数情况下，只使用第一个hash表，如果第一个hash表的数据太多，则需要执行rehash。
+dict包含了两个hash表，这样做的目的是为了支持渐进式的rehash，即：在大多数情况下，只使用第一个hash表，如果第一个hash表的数据太多，则需要执行rehash。
 
 dict与redisDb、redisServer的关系如下：
 
@@ -107,7 +107,7 @@ redis对hash表的节点也进行了简单的封装，hash表的每一个节点�
 
 # 3. 存储不同的数据类型
 
-在上一节中，详细介绍了redis的hash表以及核心数据结构之间的关系，至此，以及对redis存储数据有了一个初步的印象，但是，到目前为止还回到文章最开始的问题：如何存储不同的数据结构？
+在上一节中，详细介绍了redis的hash表以及核心数据结构之间的关系，至此，以及对redis存储数据有了一个初步的印象，但是，到目前为止还没有回答文章最开始的问题：**redis如何存储不同的数据结构？**
 
 要理解redis如何存储不同的数据结构，首先来看一下redisObject的定义：
 
@@ -128,11 +128,8 @@ redis对hash表的节点也进行了简单的封装，hash表的每一个节点�
     #define REDIS_ZSET 3
     #define REDIS_HASH 4
 
-type虽然很关键，但是，在我们这篇文章中，更多的需要关注redisObject结构中的encoding字段，该字段的含义是逻辑数据类型的具体实现。encoding的取值如下：
+type虽然很关键，但是，在我们这篇文章中，更多的需要关注encoding字段，该字段的含义是逻辑数据类型的具体实现。encoding的取值如下：
 
-    /* Objects encoding. Some kind of objects like Strings and Hashes can be
-     * internally represented in multiple ways. The 'encoding' field of the object
-     * is set to one of this fields for this object. */
     #define REDIS_ENCODING_RAW 0     /* Raw representation */
     #define REDIS_ENCODING_INT 1     /* Encoded as integer */
     #define REDIS_ENCODING_HT 2      /* Encoded as hash table */
@@ -144,17 +141,20 @@ type虽然很关键，但是，在我们这篇文章中，更多的需要关注r
     #define REDIS_ENCODING_EMBSTR 8  /* Embedded sds string encoding */
     #define REDIS_ENCODING_QUICKLIST 9 /* Encoded as linked list of ziplists */
 
-例如，对于list这种数据类型，在redis内部，可以使用ziplist实现（更加省内存）也可以使用linkedlist实现，在满足以下两个条件时，使用ziplist实现，否则，使用linkedlist实现。
+例如，对于list这种数据类型，在redis内部，可以使用ziplist实现（更加省内存），也可以使用linkedlist实现。
+
+在满足以下两个条件时，使用ziplist实现，否则，使用linkedlist实现。
 
 1. 列表对象保存的所有字符串元素的长度都小于64字节
 2. 列表对象保存的元素数量小于512
 
-再重复一遍：对于同一种数据类型，redis内部提供了多种实现，不同的实现适应与不同的场景，且用户只能通过redis.conf文件进行有限的控制，具体使用哪一种实现，完全是redis内部决定，用户在客户端，可以通过`object encoding key`查看当前key的内部实现。
+再次强调：对于同一种数据类型，redis内部提供了多种实现，不同的实现适用于不同的场景，且用户只能通过redis.conf文件进行有限的控制，具体使用哪一种实现，完全是redis内部决定。可以通过`object
+encoding key`查看当前key的内部编码，即内部实现。
 
-这篇文章介绍redis的内存布局，自然更应该关系的是内部的具体实现，而不是逻辑数据类型。不管是逻辑类型(type)还是具体实现(encoding)，都保存在redisObject中，redisObject相当于是所有数据结构的父类，redis的hash表的每一个项都是dictEntry，而每一个dictEntry，都指向一个redisObject。
+这篇文章介绍redis的内存布局，自然更应该关系的是内部的具体实现，而不是逻辑数据类型。不管是逻辑类型(type)还是具体实现(encoding)，都保存在redisObject中，**redisObject相当于是所有数据结构的父类**，redis的hash表的每一个项都是dictEntry，而每一个dictEntry，都指向一个redisObject。
 
-redis在数据的存取时，首先通过key找到对应的dictEntry，通过dictEntry获取redisObject，然后，通过redisObject的encoding的取值，对redisObject的ptr指针进行强制类型转换。
+redis在数据的存取时，首先通过key找到对应的dictEntry，接着通过dictEntry获取redisObject对象，然后通过redisObject的encoding的取值，对redisObject的ptr指针进行强制类型转换。
 
-例如：对于一个简短的list，redis很有可能使用的是quicklist存储，因此，在读取list的数据时，redis首先通过key找到dictEntry，然后通过dictEntry找到redisObject， 通过redisObject的encoding对ptr指针进行强制类型转换，在本例中，将ptr强制转换为quicklist，转换为quicklist以后，就能够获取head和tail指针，可以使用head和tail访问数据。
+**例如：** 对于一个简短的list，redis很有可能使用的是quicklist存储，因此，在读取list的数据时，redis首先通过key找到dictEntry，然后通过dictEntry找到redisObject， 通过redisObject的encoding对ptr指针进行强制类型转换，在本例中，将ptr强制转换为quicklist，转换为quicklist以后，就能够获取head和tail指针，可以使用head和tail访问数据。
 
 ![image](/cn/image/redis_dict07.png)
