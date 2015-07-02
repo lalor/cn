@@ -2,7 +2,7 @@
 layout: post
 title: "SSH穿越跳板机：一条命令跨越跳板机直接登陆远程计算机"
 description: ""
-category: 程序设计
+category: 工具
 tags: [linux, ssh, scp]
 ---
 
@@ -46,7 +46,7 @@ tags: [linux, ssh, scp]
 
 **注意：**~/.ssh/config文件有很多amazing的选项，具体可以参考这里：<http://blog.tjll.net/ssh-kung-fu>
 
-通过下面的语句登陆远程计算机：
+现在，只需要通过下面这样简单的语句登陆远程计算机：
 
     ssh target.machine
 
@@ -54,7 +54,7 @@ tags: [linux, ssh, scp]
 
     scp ToCopy.txt target.machine:~
 
-大部分人到这一步就算大功告成了，但是，我们们公司的架构其实是这样的：
+大部分人到这一步就算大功告成了，但是，其实我们公司的网络架构是这样的：
 
                                              +-----+             +-----+
                                              |     |             |     |
@@ -76,7 +76,7 @@ tags: [linux, ssh, scp]
                                              |     |             |     |
                                              +-----+             +-----+
 
-如图所示，我们有无数的跳板机，没台跳板机后面有若干台机器，因此，不适合编辑~/.ssh/ssh_config文件，最好用脚本进行封装，因此，我像下面这样使用ProxyCommand：
+如图所示，我们有无数的跳板机，每台跳板机后面有若干台机器，因此，不适合编辑~/.ssh/ssh_config文件，需要用脚本进行封装，因此，我像下面这样使用ProxyCommand：
 
 * 直接跳到远程计算机
 
