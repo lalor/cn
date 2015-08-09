@@ -2,7 +2,7 @@
 layout: post
 title: "redis源码分析之内存布局"
 description: ""
-category: 源码分析
+category: nosql
 tags: [redis]
 ---
 
