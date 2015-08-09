@@ -126,11 +126,11 @@ Python 2.2 开始提供了装饰器（decorator），装饰器作为修改函数
         print food
 
 
-到这里，我们应该已经能够理解装饰器的作用和用法了，再强调一遍： 装饰器本质上就是一个函数，这个函数接收其他函数作为参数，并将其以一个新的修改后的函数进行替换
+到这里，我们应该已经能够理解装饰器的作用和用法了，再强调一遍：装饰器本质上就是一个函数，这个函数接收其他函数作为参数，并将其以一个新的修改后的函数进行替换
 
 # 3. 使用装饰器需要注意的地方
 
-我们在上一节中演示了装饰器的用法，可以看到，装饰器其实很好理解，也非常简单。但是，要用好装饰器，还有一些我们需要注意的地方，这一节就对这些需要注意的地方进行了讨论，首先讨论了在使用装饰器的情况下，如何保留原有函数的属性(见3.1节)；然后讨论了如何实现一个更加职能的装饰器；之后讨论了使用多个装饰器时，各个装饰器的调用顺序(见3.3节)；最后说明了如何给装饰器传递参数(见3.4节)。
+我们在上一节中演示了装饰器的用法，可以看到，装饰器其实很好理解，也非常简单。但是，要用好装饰器，还有一些我们需要注意的地方，这一节就对这些需要注意的地方进行了讨论，首先讨论了在使用装饰器的情况下，如何保留原有函数的属性(见3.1节)；然后讨论了如何实现一个更加智能的装饰器；之后讨论了使用多个装饰器时，各个装饰器的调用顺序(见3.3节)；最后说明了如何给装饰器传递参数(见3.4节)。
 
 
 ## 3.1 函数的属性变化
@@ -194,19 +194,19 @@ Python 2.2 开始提供了装饰器（decorator），装饰器作为修改函数
 
 此外，我们也可以向下面这样：
 
-def is_admin(f):
-    def wrapper(*args, **kwargs):
-        if kwargs.get("username") != 'admin':
-            raise Exception("This user is not allowed to get food")
-        return f(*args, **kwargs)
-    return functools.wraps(f)(wrapper) # important
+    def is_admin(f):
+        def wrapper(*args, **kwargs):
+            if kwargs.get("username") != 'admin':
+                raise Exception("This user is not allowed to get food")
+            return f(*args, **kwargs)
+        return functools.wraps(f)(wrapper) # important
 
 当然，个人推荐第一种方法，因为第一种方法可读性更强。
 
 
 ## 3.2 使用inspect获取函数参数
 
-下面看一下程序清单6,它是否会正确输出结果呢？
+下面看一下程序清单8,它是否会正确输出结果呢？
 
 **程序清单8**
 
@@ -322,7 +322,7 @@ which should return
 	@makeitalic
 	hello()
 
-	hello_copy = makebole(makeitalic(helo))
+	hello-copy = makebold(makeitalic(helo))
 
 因此，这样理解以后，对于多个装饰器的调用顺序，就不再有疑问了。
 
@@ -361,7 +361,7 @@ which should return
         time.sleep(5)
 
 
-对应于我们这篇博客一直讨论的例子，传递传输的代码如下所示：
+对应于我们这篇博客一直讨论的例子，传递参数的代码如下所示：
 
 
 **程序清单11**
@@ -388,7 +388,7 @@ which should return
         barfoo(username='root')
 
 
-# 4 装饰器的使用场景与缺点
+# 4. 装饰器的使用场景与缺点
 
 ## 4.1 装饰器的使用场景
 
@@ -460,7 +460,7 @@ which should return
 - You cannot un-decorate a function. (There are hacks to create decorators that can be removed, but nobody uses them.) So once a function is decorated, it’s decorated for all the code.
 - Decorators wrap functions, which can make them hard to debug.
 
-# 其他学习资料
+# 5. 其他学习资料
 
 本文较为全面地介绍了装饰器的用法，也给出了装饰器的使用场景和缺点。如果还需要进一步的学习装饰器，可以了解一下下面这几份资料：
 
