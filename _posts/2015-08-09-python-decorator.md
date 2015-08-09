@@ -1,3 +1,10 @@
+---
+layout: post
+title: "python装饰器入门与提高"
+description: ""
+category: 程序设计语言
+tags: [python]
+---
 
 #1. 介绍
 
