@@ -361,32 +361,6 @@ which should return
         time.sleep(5)
 
 
-对应于我们这篇博客一直讨论的例子，传递传输的代码如下所示：
-
-
-**程序清单11**
-
-
-    def is_admin(admin='admin'):
-        def decorated(f):
-            @functools.wraps(f)
-            def wrapper(*args, **kwargs):
-                if kwargs.get("username") != admin:
-                    raise Exception("This user is not allowed to get food")
-                return f(*args, **kwargs)
-            return wrapper
-        return decorated
-
-
-    @is_admin(admin='root')
-    def barfoo(username='someone'):
-        """Do crazy stuff"""
-        print '{0} get food'.format(username)
-
-
-    if __name__ == '__main__':
-        barfoo(username='root')
-
 
 # 4 装饰器的使用场景与缺点
 
@@ -402,7 +376,7 @@ which should return
 下面这个例子演示了上面提到的3中情况，如下所示：
 
 
-**程序清单12**
+**程序清单11**
 
     def benchmark(func):
         """
