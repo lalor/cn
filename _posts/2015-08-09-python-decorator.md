@@ -58,7 +58,7 @@ Python 2.2 开始提供了装饰器（decorator），装饰器作为修改函数
 
 现在代码整洁一点了，但是，有装饰器能够做的更好：
 
-程序清单3
+**程序清单3**
 
     def check_is_admin(f):
         def wrapper(*args, **kwargs):
@@ -264,33 +264,33 @@ Python 2.2 开始提供了装饰器（decorator），装饰器作为修改函数
 
 How can I make two decorators in Python that would do the following?
 
-@makebold
-@makeitalic
-def say():
-   return "Hello"
+    @makebold
+    @makeitalic
+    def say():
+       return "Hello"
 
 which should return
 
-<b><i>Hello</i></b>
+    <b><i>Hello</i></b>
 
 **答案**
 
-def makebold(fn):
-    def wrapped():
-        return "<b>" + fn() + "</b>"
-    return wrapped
+    def makebold(fn):
+        def wrapped():
+            return "<b>" + fn() + "</b>"
+        return wrapped
 
-def makeitalic(fn):
-    def wrapped():
-        return "<i>" + fn() + "</i>"
-    return wrapped
+    def makeitalic(fn):
+        def wrapped():
+            return "<i>" + fn() + "</i>"
+        return wrapped
 
-@makebold
-@makeitalic
-def hello():
-    return "hello world"
+    @makebold
+    @makeitalic
+    def hello():
+        return "hello world"
 
-print hello() ## returns <b><i>hello world</i></b>
+    print hello() ## returns <b><i>hello world</i></b>
 
 **分析**
 
@@ -318,6 +318,9 @@ print hello() ## returns <b><i>hello world</i></b>
 
 下面通过一个官方的[例子][1]来看如何给装饰器传递参数。官方介绍了一个非常有用的装饰器，即设置超时器。如果函数调用超时，则抛出异常。
 
+
+**程序清单10**
+
     def timeout(seconds, error_message = 'Function call timed out'):
        def decorated(func):
            def _handle_timeout(signum, frame):
@@ -336,6 +339,8 @@ print hello() ## returns <b><i>hello world</i></b>
 
        return decorated
 
+
+使用方法如下：
 
     import time
 
@@ -357,6 +362,9 @@ print hello() ## returns <b><i>hello world</i></b>
 - 修改调用时的上下文（线程异步或者并行，类方法）
 
 下面这个例子演示了上面提到的3中情况，如下所示：
+
+
+**程序清单11**
 
     def benchmark(func):
         """
@@ -419,7 +427,7 @@ print hello() ## returns <b><i>hello world</i></b>
 本文较为全面地介绍了装饰器的用法，也给出了装饰器的使用场景和缺点。如果还需要进一步的学习装饰器，可以了解一下下面这几份资料：
 
 - [python decorator library][1]
-- [source of flask][4]
+- [source code of flask][4]
 - [Magic decorator syntax for asynchronous code in Python][3]
 - [A Python decorator that helps ensure that a Python Process is running only once][2]
 
