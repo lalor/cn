@@ -2,7 +2,7 @@
 layout: post
 title: "几款写python的vim插件"
 description: ""
-category: 数据库
+category: 程序设计语言
 tags: [vim, linux]
 ---
 
