@@ -12,9 +12,9 @@ tags: [ssh]
 
 # 2. 需求描述
 
-![ssh_mysql](/cn/image/ssh_mysql_01.png)
-
 图1 需求示意图
+
+![ssh_mysql](/cn/image/ssh_mysql_01.png)
 
 图1描述了用户的具体需求,即用户在localhost这台机器上,数据库实例在B这台机器上,由于网络隔离的原因,用户无法直接访问B这台机器.但是,用户可用SSH到A这台机器,而A这台机器是可以访问B这台机器上的数据库实例的.因此,可以考虑将A作为跳板机,使用SSH隧道技术,以便用户在localhost上可以直接访问B这台机器上的数据库.
 
