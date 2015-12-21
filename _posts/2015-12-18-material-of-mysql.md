@@ -68,11 +68,13 @@ tags: [MySQL, 数据库]
 
 《[深入理解MySQL核心技术][7]》是第一本关于MySQL源码的书，着重介绍了MySQL的Server层，重点介绍了宏观架构，对于刚开始学习MySQL源码的人，相信会有很大的帮助，我在学习MySQL源码的过程中，反复的翻阅了几遍，这本书刚开始看的时候会很痛苦，但是，对于研究MySQL源码，非常有帮助，就看你是否需要，如果没有研究MySQL源码的决心，这本书应该会被唾弃。
 
+![深入理解MySQL核心技术](http://img3.doubanio.com/lpic/s6073229.jpg)
+
 #### 2.4 MySQL内核：InnoDB存储引擎
 
 我们组的同事写的《[MySQL内核：InnoDB存储引擎][8]》，可能宇宙范围内这本书就数我学得最认真了，虽然书中有很多编辑错误，但是，平心而论，还是写得非常好的，相对于《深入理解MySQL核心技术》，可读性更强一些，建议研究Innodb存储引擎的朋友，可以了解一下，先对Innodb有一个宏观的概念，对大致原理有一个整体的了解，然后再深入细节，肯定会比自己从头开始研究会快很多，这本书可以帮助你事半功倍。
 
-![深入理解MySQL核心技术](http://img3.doubanio.com/lpic/s6073229.jpg)
+![MySQL内核](http://img4.douban.com/lpic/s27266366.jpg)
 
 #### 2.5 MySQL Internals Manual
 
