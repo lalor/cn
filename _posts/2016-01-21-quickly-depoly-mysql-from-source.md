@@ -12,7 +12,7 @@ tags: [MySQL, 数据库]
 
 本文介绍两个工具，用以快速构建MySQL的学习环境，让大家从安装MySQL的痛苦之中解脱出来。也让编译debug版本的数据库变得更加容易，希望根据我的学习经验，能够帮助各位学习MySQL道路上轻松愉悦一点。
 
-### 用Docker快速部署MySQL
+### 1. 用Docker快速部署MySQL
 
 Docker大家应该听说过，可能你用过，也可能你没有用过，不管怎么样，赶紧用起来，赶紧用起来，赶紧用起来（重要的事情说了三遍）。
 
@@ -42,7 +42,7 @@ Docker的安装就不介绍了，可以参考[这里][3]。下面介绍如何通
 ![docker-mysql](/cn/image/docker-mysql.png)
 
 
-### 用mysql_sandbox源码编译MySQL
+### 2. 用mysql_sandbox源码编译MySQL
 
 接下来要介绍的是mysql_sandbox，这是一个专门为MySQL提供的工具，目的是快速部署MySQL的环境，支持部署主从、部署多个MySQL进程，支持从二进制包部署，也支持从MySQL源码部署。
 
@@ -50,7 +50,7 @@ Docker的安装就不介绍了，可以参考[这里][3]。下面介绍如何通
 
 注意了，mysql_sandbox支持从源码部署MySQL，也就是说，如果想要debug MySQL，或者想要对MySQL进行修修改改立马看到效果，使用mysql_sandbox有助于提高学习热情和工作效率。
 
-#### mysql_sandbox的安装
+#### 2.1 mysql_sandbox的安装
 
 简单介绍一下mysql_sandbox的安装，语句如下：
 
@@ -70,7 +70,7 @@ mysql_sandbox安装完成以后，会生成下列工具：
 
 通过名字已经能够大概猜到各个工具的作用，具体的使用方法，通过`--help` 获取帮助信息即可。
 
-#### 从源码部署mysql_sandbox
+#### 2.2 使用mysql_sandbox从源码部署MySQL
 
 例如，我在自己的电脑里，获取了MySQL 5.6.24的源码，进入源码所在的目录，执行cmake和make命令，
 然后跳出源码目录，执行`make_sandbox_from_source`，如下所示：
@@ -91,7 +91,7 @@ mysql_sandbox安装完成以后，会生成下列工具：
 
 从上面的操作可以看到，如果mysql_sandbox已经准备就绪，只需要三条语句，就能够完成MySQL的安装。
 
-### 总结
+### 3. 总结
 
 Docker和mysql_sandbox都是学习MySQL的好工具，充分利用能够有效提高大家的学习效率，希望对大家有所帮助。
 
