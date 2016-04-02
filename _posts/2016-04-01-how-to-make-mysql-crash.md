@@ -6,8 +6,6 @@ category: 数据库
 tags: [MySQL]
 ---
 
-# 如何搞挂MySQL
-
 
 本文将介绍三种搞挂MySQL的方式，逗大家一乐，感兴趣的同学可以找一个MySQL实例进行测试。三种方式分别是：1）产生大量undo日志撑满磁盘空间导致MySQL不可用；2）定义大量用户变量耗尽MySQL的内存；3）触发MySQL的bug。
 
