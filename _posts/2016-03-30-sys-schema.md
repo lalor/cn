@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "MySQL 5.7的sys schema"
+title: "DBA的好帮手 —— sys schema"
 description: ""
 category: 数据库
 tags: [MySQL]
