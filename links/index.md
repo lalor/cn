@@ -16,8 +16,11 @@ comments: yes
 
 - [林子雨][6] 厦门大学计算机系青年教师，我的恩师
 - [谢益辉][4] 榜样
+
 <!--- [陈文强][5] 朋友-->
 - [苏志锋][7] 师兄
+- [胡争][8] 算法和存储，python高手
+- [欣欣][9] ZK专家，专注HBase
 
 
 [1]: http://www.theunixschool.com/
@@ -27,3 +30,5 @@ comments: yes
 [5]: http://irwenqiang.com
 [6]: http://www.cs.xmu.edu.cn/database/linziyu/index.html
 [7]: http://www.rocsky.name/
+[8]: http://openinx.github.io/
+[9]: http://hbasefly.com
