@@ -94,6 +94,7 @@ MySQL 5.7.5 开始，可以在线修改buffer pool，如下所示：
 # 4. 优化buffer pool的刷盘操作
 
 MySQL 5.7对buffer pool的刷新改进有以下三点：
+
 1. 可以通过参数innodb_page_cleaners修改多个page clean thread线程数，最多不能操作innodb_buffer_pool_instance
 2. 通过使用Hazard Pointers，减少了扫描buffer pool的代价，Hazard Pointer可以查看《[锁无关的数据结构与Hazard指针——操纵有限的资源][1]》
 3. 优化了刷盘策略，详细信息可以看这里[WL7868][8]。
