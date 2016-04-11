@@ -13,12 +13,13 @@ Email：me@mingxinglai.com
 
 # 专业技能
 
-- 掌握基本的数据结构和算法
-- 熟悉linux，C/C++，python, makefile，gcc, gdb, git, 精通Shell脚本
+- 掌握基本的数据结构和算法(算法C语言实现, C语言接口与实现)
+- 熟悉linux，java, C，python, gcc, gdb, git, 精通Shell脚本
 - 喜欢折腾linux下的各种监控和调优工具(iostat, perf, dstat, tcpdump)
 - 能够在linux下全键盘工作（vim，tmux，apvlv，awesome, zsh）
-- 熟悉MySql，正在研究MySQL源码，希望在数据库领域有点成绩
-- 对系统编程，网络编程和NoSql有极大的兴趣
+- 熟悉MySQL，正在研究MySQL源码，希望在数据库领域有点成绩
+- 对系统编程，关系型数据库，NoSQL有极大的兴趣(MySQL, leveldb, redis)
+- 注重代码质量，一直在学习优秀的开源项目(重构, 代码整洁之道)
 - 不爱追求时髦技术，喜欢研究计算机系统原理（深入理解计算机系统）
 
 # 教育背景
