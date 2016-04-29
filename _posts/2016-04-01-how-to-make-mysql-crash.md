@@ -7,18 +7,20 @@ tags: [MySQL]
 ---
 
 
-本文将介绍三种搞挂MySQL的方式，逗大家一乐，感兴趣的同学可以找一个MySQL实例进行测试。三种方式分别是：1）产生大量undo日志撑满磁盘空间导致MySQL不可用；2）定义大量用户变量耗尽MySQL的内存；3）触发MySQL的bug。
+本文将介绍三种搞挂MySQL的方式，逗大家一乐，与此同时，也会揭露一些MySQL的使用过程中的注意事项和实现原理，以供参考。感兴趣的同学可以找一个MySQL实例进行测试。三种方式分别是
 
-**声明：**  这里介绍的三种方式可以搞挂目前大多数的线上MySQL实例，所以，测试请谨慎，如果不是自己的示例，请在测试环境进行实验。
+1. 产生大量undo日志撑满磁盘空间导致MySQL不可用
+2. 定义大量用户变量耗尽MySQL的内存
+3. 触发MySQL的bug
+
+**声明：**  这里介绍的三种方式可以搞挂目前大多数的线上MySQL实例，所以，测试请谨慎。
 
 
 # 1. 产生大量的undo日志
 
-众所周知，InnoDB是一个支持MVCC的存储引擎，为了支持MVCC，InnoDB需要保存undo日志，以便对用户提供记录的历史版本。
+众所周知，InnoDB是一个支持MVCC的存储引擎，为了支持MVCC，InnoDB需要保存undo日志，以便对用户提供记录的历史版本。如果我们反复地更新一条记录而不提交，会怎么样呢？将会产生大量的undo日志，使得磁盘空间爆满，导致MySQL不可用。
 
-那么，如果我们反复地更新一条记录而不提交，将会产生大量的undo日志，使得磁盘空间爆满，导致MySQL不可用。
-
-在innodb现有的实现中，并没有对单个用户或单个连接使用的undo空间进行限制。也就是说，我们只需要反复更新一条记录，而不提交，就会产生大量undo日志，由于我们的事务没有提交，undo日志不能被回收，从而使得磁盘空间被耗尽，最终导致MySQL挂掉。
+在innodb现有的实现中，并没有对单个用户或单个连接使用的undo空间进行限制。也就是说，我们只需要反复更新一条记录，而不提交，就会产生大量undo日志。由于我们的事务没有提交，undo日志不能被回收，从而使得磁盘空间被耗尽，最终导致MySQL挂掉。
 
 Jeremy Cole老早就提到过这个[问题][1]，不过该问题至今还存在。要进行该项测试，只需要有更新记录的权限即可。测试脚本如下：
 
@@ -65,15 +67,13 @@ Jeremy Cole老早就提到过这个[问题][1]，不过该问题至今还存在�
     InnoDB: Some operating system error numbers are described at
     InnoDB: http://dev.mysql.com/doc/refman/5.6/en/operating-system-error-codes.html
 
-可以看到，虽然MySQL进程还存在，其实服务已经不可用了。事务在执行过程中，会产生undo日志以及binlog日志，占用磁盘空间，如果我们在线上执行一个大事务，就需要留意是否有可能因为undo和binlog导致磁盘空间爆满的情况，为了规避风险，我们还是应该尽可能的避免特别大的事务。
+可以看到，虽然MySQL进程还存在，其实服务已经不可用了。事务在执行过程中，会产生undo日志以及binlog日志，占用磁盘空间，如果我们在线上执行一个大事务，就需要留意是否有可能因为undo和binlog导致磁盘空间爆满的情况。为了规避风险，我们还是应该尽可能的避免特别大的事务。
 
 # 2. 定义大量的变量
 
-上面的例子并没有真的让MySQL进程挂掉，而且需要对数据库具有写的权限。你可能不服，那么，我们再来看一个情况————定义大量的变量。
+上面的例子并没有真的让MySQL进程挂掉，而且需要对数据库具有写的权限。你可能不服，那么，我们再来看另外一种情况，即定义大量的变量。
 
 这种方式将会导致MySQL占用的内存急剧上涨，最后被操作系统kill掉。而且，只需要有登录数据库的权限即可。
-
-想想之前[姜老师][4]搞了一个线上写SQL的比赛，这种方式就可以轻易地将姜老师的数据库搞垮了。
 
 测试脚本如下：
 
@@ -131,17 +131,48 @@ Jeremy Cole老早就提到过这个[问题][1]，不过该问题至今还存在�
     [ 2859.949210] Out of memory: Kill process 6879 (mysqld) score 927 or sacrifice child
     [ 2859.950665] Killed process 6879 (mysqld) total-vm:4125200kB, anon-rss:1905488kB, file-rss:0kB
 
+上面的例子演示了一个普通用户耗尽资源，导致MySQL被操作系统kill掉的情况。其实，这个问题是完全可以避免的。MySQL支持在创建用户的时候，[限制用户使用的资源][3]。
+
+可以限制的资源包括：
+
+* 每小时的查询次数
+* 每小时的更新次数
+* 每小时的连接次数
+* 同时建立的连接数
+
+使用方式如下所示：
+
+    mysql> CREATE USER 'francis'@'localhost' IDENTIFIED BY 'frank';
+    mysql> GRANT ALL ON customer.* TO 'francis'@'localhost'
+        ->     WITH MAX_QUERIES_PER_HOUR 20
+        ->          MAX_UPDATES_PER_HOUR 10
+        ->          MAX_CONNECTIONS_PER_HOUR 5
+        ->          MAX_USER_CONNECTIONS 2;
+
+虽然MySQL支持限制用户使用的资源，但是，在实际使用过程中，很少有人会去限制用户使用的资源，甚至很多用户根本不知道MySQL提供了这样的功能，这给"不法分子"有了可乘之机。
+
 # 3. 触发MySQL的bug
 
-可以说，写MySQL的都是一群科学家，而且，由于MySQL使用如此广泛，遇到MySQL的bug的情况应该不容易，不过，也不是没有的。如果看MySQL的release note，每次的新版本都会修复无数的bug。
+可以说，写MySQL的都是一群科学家，并且，MySQL使用如此广泛，遇到MySQL的bug应该不容易。不过，只要是程序就有可能存在bug，所以，遇到MySQL的bug也不是不可能的情况。如果看MySQL的release note，每次的新版本都会修复无数的bug。尤其以新功能的bug居多。
 
-这里，我们来测试一下MySQL的bug。之所以选择这个bug，是因为该bug复现起来太容易了，只需要执行一条SQL语句即可。
+这一节，我们来测试一下MySQL的bug。之所以选择这个bug，是因为该bug复现起来特别容易了，只需要执行一条SQL语句即可。
 
 在使用grant授权时，如果使用了一个很长的数据库名，将导致MySQL挂掉。如下所示：
+
 ![mysql_bug.png-9kB][2]
 
-很明显，该问题是由于缓冲区溢出导致，这也是我们编程中容易犯的一个错误。这个bug在MySQL 5.7中已经修复，我在我们的线上环境（5.6.19）中进行测试，MySQL立马挂掉，简直是搞挂MySQL的最快方式。
+很明显，该问题是由于缓冲区溢出导致，这也是我们编程中容易犯的一个错误。这个bug在MySQL 5.7中已经修复，我在5.6.19中进行测试，MySQL立马挂掉，可以说是搞挂MySQL的最快方式。
+
+# 4. 总结
+
+在这篇文章中，我们演示了三种搞挂MySQL的方式，这三种方式的思路不同，涉及到的知识点也不一样。将这三种方式都尝试一遍，可以搞挂正在使用的无数MySQL实例。那么，是不是说MySQL特别脆弱，非常容易被搞挂呢?答案是否定的。MySQL在各互联网公司广泛使用，已经经受住了无数的考验。在这篇文章中，之所以显得MySQL容易被搞挂，主要还是大部分人的使用姿势不当，以及对MySQL的了解不够导致。要避免MySQL挂掉，这里有几点建议：
+
+1. 特别大的事务会占用特别多的资源，甚至出现占满磁盘空间的情况，要避免特别大的事务
+2. 限制用户使用的资源，避免不良用户恶意破坏
+3. 紧随社区的脚步，关注社区报告和修复的bug，必要时升级数据库版本，以免遇到已知bug
+4. 新功能一般bug较多，不要上得太快，避免踩到未知bug
+
 
 [1]:http://blog.jcole.us/2014/04/16/a-little-fun-with-innodb-multi-versioning/
 [2]: http://static.zybuluo.com/lmx07/kdo79hs5tuo8darmczujxmiv/mysql_bug.png
-[4]: http://www.innomysql.net
+[3]: http://dev.mysql.com/doc/refman/5.6/en/user-resources.html
