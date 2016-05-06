@@ -21,6 +21,7 @@ comments: yes
 - [苏志锋][7] 师兄
 - [胡争][8] 算法和存储，python高手
 - [欣欣][9] ZK专家，专注HBase
+- [罗道文][10] 师弟
 
 
 [1]: http://www.theunixschool.com/
@@ -32,3 +33,4 @@ comments: yes
 [7]: http://www.rocsky.name/
 [8]: http://openinx.github.io/
 [9]: http://hbasefly.com
+[10]: http://luodw.cc/
