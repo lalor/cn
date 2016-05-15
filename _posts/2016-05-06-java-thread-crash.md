@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "同学,你的java线程挂了!"
+title: "从一个java线程挂掉的例子讨论分析定位问题基本原则"
 description: ""
 category: 程序语言
 tags: [java, executor, thread]
