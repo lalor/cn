@@ -72,7 +72,8 @@ tags: [python, 爬虫, BeautifulSoup]
 2. 通过requests获取用户的关系
 3. 通过BeautifulSoup解析用户的信息，并保存到Person对象中
 4. 如果用户已经crawl过了，则跳过
-5. 如果爬取的信息，达到了最高限制，则保存爬取的信息然后退出
+5. 如果用户没有被crawl过，则加入到字典
+6. 如果爬取的信息，达到了最高限制，则保存爬取的信息然后退出
 
 
 有了这些信息以后，我们可以干什么呢。这个就发挥自己的想象了，可以做的事情非常多，例如，你可以统计有多少用户的粉丝超过了1000，获取超过100个赞的用户占所有用户的比例，如果建立一张网络，你还可以看看是否自己到每一个人只需要6个link就够了。
@@ -147,9 +148,9 @@ tags: [python, 爬虫, BeautifulSoup]
                 'Referer':'http://www.zhihu.com/people/{0}/followers'.format(user),
                 'Content-Type':'application/x-www-form-urlencoded',
                 }
-            address = zhihu_url_format.format(user)
+            url = zhihu_url_format.format(user)
 
-            r = requests.get(address, headers=header_info, cookies=self.cookies, verify=False)
+            r = requests.get(url, headers=header_info, cookies=self.cookies, verify=False)
             return self._parser_result(r.text)
 
 
@@ -193,18 +194,9 @@ tags: [python, 爬虫, BeautifulSoup]
                 _za="54d84ead-f3f1-47d4-b3a5-0d987888e8fd",
                 _zap="0fa63ba-9936-412d-941f-e3e1bee5f7e6",
                 _xsrf="e03ca7c4f2632180b98000129d61b8f",
-                q_c1="b205a7b63b74f7ba4bb4842247d5833|1469174784000|1469174784000",
-                cap_id="Yc2NTE3OTcyOTI1NGE4YWI5ZTNkYjJkZWJiNjBiZDE=|1469174784|0e09aaf581ee5c7b4e2a5ca20d0fb33eb5d45bcc",
-                l_cap_id="NWI5NzI0N2I1MzFjNGE3NDkxNzRiOWJlNzRlMThjMDg=|1469174784|71f8df44f41c889736aa1b86de21fa5b4993ec4f",
-                login="ZjM2OGI5NWEwNzM5NDdiMGI1NjU3ZmUwZWQ1ZjVjMzg=|1469174791|d653e570ecdaa8bac6d89b24555b06512b08586b",
                 __utmt="1",
-                a_t="2.0AABAP_UYAAAXAAAAgWrXVwAAQD_1GAAAAEDAlNQcDQoXAAAAYQJVTQhhuVcA-cmQOoswkEGTaFxR66egnJlMfo73Vfg9J_n9ZeLDZvHhjB2YjqI5tw==",
-                z_c0="Mi4wQUFCQVBfVVlBQUFBUU1DVTFCd05DaGNBQUFCaEFsVk5DR0c1VndENXlaQTZpekNRUVpOb1hGSHJwNkNjbVV4LWpn|1471143297|9432265498da50c3204b160e9b6e8a4573897164",
-                __utma="51854390.1009870678.1471000231.1471102670.1471142380.7",
                 __utmb="51854390.11.9.1471142691581",
-                __utmc="51854390",
-                __utmz="51854390.1471142380.7.2.utmcsr=baidu|utmccn=(organic)|utmcmd=organic",
-                __utmv="51854390.100-1|2=registration_date=20111225=1^3=entry_date=20111225=1")
+                __utmc="51854390")
 
 
         user_list = ["mingxinglai.com"]
