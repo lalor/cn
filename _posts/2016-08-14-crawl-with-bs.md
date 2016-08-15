@@ -209,6 +209,32 @@ tags: [python, 爬虫, BeautifulSoup]
     if __name__ == '__main__':
         main()
 
+
+下面是分析的结果，统计知乎中户中，粉丝的个数。可以看到，如果一个人的粉丝超过50个，则超过了80%的知乎用户。
+
+![img1](/cn/image/bs_crawl_example1.png)
+![img2](/cn/image/bs_crawl_example2.png)
+
+获取统计数据的代码如下：
+
+    #!/usr/bin/python
+    #-*- coding: UTF-8 -*-
+    import json
+    import codecs
+    
+    with codecs.open('data.txt') as f:
+        data = json.load(f)
+    
+    persons = data.values()
+    
+    scale = [0, 10, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 100000, 999999999999]
+    
+    res = []
+    for i in range(len(scale)-1):
+        res.append( len(filter(lambda person: scale[i] <= int(person["follwers"].split()[0]) < scale[i+1], persons)))
+    print res
+    print [ round(float(item) * 100 / sum(res), 2) for item in res ]
+
 完。
 
 [1]: http://docs.python-requests.org/zh_CN/latest/user/quickstart.html
