@@ -110,6 +110,18 @@ Flask 的理念是为所有应用建立一个良好的基础，其余的一切�
 
 ## 3. Flask源码分析
 
+Flask的使用非常简单，官网的例子如下：
+
+    from flask import Flask
+    app = Flask(__name__)
+    
+    @app.route("/")
+    def hello():
+        return "Hello World!"
+    
+    if __name__ == "__main__":
+        app.run()
+
 每当我们需要创建一个flask应用时，我们都会创建一个Flask对象:
 
     app = Flask(__name__)
@@ -266,6 +278,7 @@ LocalStack仅有一个成员变量`self._local = Local()`。
 
     _request_ctx_stack = LocalStack()
         _request_ctx_stack.push(item)
+                # 注意，这里赋值的时候，会调用__setattr__方法
                 self._local.stack = rv = [] ==> __setattr__(self, name, value)
 
 
@@ -302,11 +315,16 @@ LocalStack是一个全局字典，或者说是一个名字空间。这个名字�
 读者可以自行看一下LocalProxy的源码，LocalProxy仅仅是一个代理（可以想象设计模式中的代理模式）。
 
 通过LocalStack和LocalProxy这样的Python魔法，每个线程访问当前请求中的数据(request, session)时，
-都好像都在访问一个全局变量，但是，互相之间又互不影响。这就是Flask为我们提供的遍历，也是我们
+都好像都在访问一个全局变量，但是，互相之间又互不影响。这就是Flask为我们提供的便利，也是我们
 选择Flask的理由！
 
 
-### 参考资料
+## 5. 总结
+
+在这篇文章中，我们简单地介绍了WSGI, jinjia2和Werkzeug，详细介绍了Flask在web开发中所处的位置和发挥的作用。最后，深入Flask的源码，了解了Flask的实现。
+
+
+## 6. 参考资料
 
 1. <https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface>
 2. <http://docs.jinkan.org/docs/jinja2/>
