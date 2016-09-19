@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "聊聊Python并发"
+title: "Python并发工具"
 description: ""
 category: 编程语言
 tags: [python, 并发]
