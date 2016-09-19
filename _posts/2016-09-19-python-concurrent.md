@@ -20,7 +20,7 @@ tags: [python, 并发]
 5. Python 3的asyncio
 6. 开源的gevent
 
-![snake](/cn/a-yellow-snake-pv.png)
+![snake](/cn/image/a-yellow-snake-pv.png)
 
 ### 1. Python的threading库
 
@@ -205,7 +205,7 @@ gevent的好处是Python 2和Python 3都可以使用,不像asyncio只能在pytho
 
 所以上段代码的执行流程如下：
 
-![flow](/cn/python_concurrent_flow.gif)
+![flow](/cn/image/python_concurrent_flow.gif)
 
 ### 总结
 
